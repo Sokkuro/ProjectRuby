@@ -11,6 +11,14 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates :role, inclusion: { in: ROLES }
 
+  def self.ransackable_attributes(auth_object = nil)
+    %w[id email role provider uid created_at updated_at]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[bookings rooms]
+  end
+
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email

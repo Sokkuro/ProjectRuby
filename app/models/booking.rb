@@ -28,6 +28,14 @@ class Booking < ApplicationRecord
     calculate_price(room, start_time, end_time)
   end
 
+  def self.ransackable_associations(auth_object = nil)
+    %w[room user]
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    %w[id room_id user_id start_time end_time total_price status created_at updated_at]
+  end
+
   def duration_hours
     (end_time - start_time) / 3600.0
   end
