@@ -1,0 +1,10 @@
+<%= form_with model: [:owner, room], local: true do |f| %>
+  <% if room.errors.any? %>
+    <div class="alert alert-alert"><%= room.errors.full_messages.join(", ") %></div>
+  <% end %>
+  <div class="field"><%= f.label :name %><%= f.text_field :name %></div>
+  <div class="field"><%= f.label :location %><%= f.text_field :location %></div>
+  <div class="field"><%= f.label :price_per_hour %><%= f.number_field :price_per_hour, step: 0.01 %></div>
+  <div class="field"><%= f.label :is_active %><%= f.check_box :is_active %></div>
+  <%= f.submit class: "btn" %>
+<% end %>

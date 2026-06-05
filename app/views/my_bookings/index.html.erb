@@ -1,0 +1,28 @@
+<h1>Мои бронирования</h1>
+
+<% if @bookings.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Помещение</th>
+        <th>Начало</th>
+        <th>Окончание</th>
+        <th>Сумма</th>
+        <th>Статус</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @bookings.each do |booking| %>
+        <tr>
+          <td><%= link_to booking.room.name, room_path(booking.room) %></td>
+          <td><%= l(booking.start_time, format: :short) %></td>
+          <td><%= l(booking.end_time, format: :short) %></td>
+          <td><%= booking.total_price %> ₽</td>
+          <td><%= booking.status %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>У вас пока нет бронирований. <%= link_to "Выбрать помещение", rooms_path %>.</p>
+<% end %>

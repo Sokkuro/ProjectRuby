@@ -1,0 +1,25 @@
+<h1>Регистрация</h1>
+
+<%= form_with model: resource, as: resource_name, url: registration_path(resource_name), local: true, html: { data: { turbo: false } } do |f| %>
+  <%= render "devise/shared/error_messages", resource: resource %>
+
+  <div class="field">
+    <%= f.label :email, "Email" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password, "Пароль (мин. 6 символов)" %>
+    <%= f.password_field :password, autocomplete: "new-password", required: true, minlength: 6 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation, "Подтверждение пароля" %>
+    <%= f.password_field :password_confirmation, autocomplete: "new-password", required: true, minlength: 6 %>
+  </div>
+
+  <%= f.submit "Зарегистрироваться", class: "btn" %>
+<% end %>
+
+<p><%= link_to "Уже есть аккаунт? Войти", new_user_session_path %></p>
+<p><%= link_to "Войти через GitHub", github_auth_path %></p>

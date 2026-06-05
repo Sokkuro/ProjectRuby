@@ -1,0 +1,37 @@
+<h1>Новое бронирование</h1>
+<p>Помещение: <strong><%= @room.name %></strong> (<%= @room.price_per_hour %> ₽/час)</p>
+
+<div
+  class="card booking-form"
+  data-controller="booking-calculator"
+  data-booking-calculator-price-value="<%= @room.price_per_hour %>"
+  data-booking-calculator-occupied-value="<%= @room.occupied_slots.map { |s, e| { start: s.iso8601, end: e.iso8601 } }.to_json %>"
+>
+  <%= form_with model: @booking, url: bookings_path, local: true do |f| %>
+    <%= f.hidden_field :room_id, value: @room.id %>
+
+    <% if @booking.errors.any? %>
+      <div class="alert alert-alert">
+        <ul>
+          <% @booking.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :start_time, "Начало" %>
+      <%= f.datetime_local_field :start_time,
+            data: { booking_calculator_target: "start", action: "change->booking-calculator#update" } %>
+    </div>
+    <div class="field">
+      <%= f.label :end_time, "Окончание" %>
+      <%= f.datetime_local_field :end_time,
+            data: { booking_calculator_target: "end", action: "change->booking-calculator#update" } %>
+    </div>
+    <p class="price-display" data-booking-calculator-target="price">Стоимость: 0 ₽</p>
+    <p data-booking-calculator-target="warning" class="occupied-slot" hidden></p>
+    <%= f.submit "Забронировать", class: "btn" %>
+  <% end %>
+</div>

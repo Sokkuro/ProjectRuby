@@ -1,0 +1,13 @@
+<h1>Помещения</h1>
+
+<div class="grid">
+  <% @rooms.each do |room| %>
+    <div class="card">
+      <h2><%= link_to room.name, room_path(room) %></h2>
+      <p><%= room.location %></p>
+      <p><strong><%= room.price_per_hour %> ₽/час</strong></p>
+      <p>Владелец: <%= room.user.email %></p>
+      <%= link_to "Подробнее", room_path(room), class: "btn" %>
+    </div>
+  <% end %>
+</div>

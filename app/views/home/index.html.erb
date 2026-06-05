@@ -1,0 +1,23 @@
+<h1>Бронирование коворкингов</h1>
+<p>Добро пожаловать! Найдите переговорную или рабочее место и забронируйте онлайн.</p>
+
+<% unless user_signed_in? %>
+  <p>
+    <%= link_to "Регистрация", new_user_registration_path, class: "btn" %>
+    <%= link_to "Войти", new_user_session_path, class: "btn btn-secondary" %>
+    <%= link_to "GitHub", github_auth_path %>
+  </p>
+<% end %>
+
+<h2>Последние помещения</h2>
+<div class="grid">
+  <% @recent_rooms.each do |room| %>
+    <div class="card">
+      <h3><%= link_to room.name, room_path(room) %></h3>
+      <p><%= room.location %></p>
+      <p><strong><%= room.price_per_hour %> ₽/час</strong></p>
+    </div>
+  <% end %>
+</div>
+
+<p><%= link_to "Все помещения →", rooms_path %></p>

@@ -1,0 +1,11 @@
+<h1>Мои помещения</h1>
+<%= link_to "Добавить помещение", new_owner_room_path, class: "btn" %>
+
+<% @rooms.each do |room| %>
+  <div class="card">
+    <h2><%= link_to room.name, owner_room_path(room) %></h2>
+    <p><%= room.location %> — <%= room.price_per_hour %> ₽/час</p>
+    <p>Активно: <%= room.is_active ? "да" : "нет" %></p>
+    <%= link_to "Редактировать", edit_owner_room_path(room) %>
+  </div>
+<% end %>

@@ -1,0 +1,48 @@
+<h1><%= @room.name %></h1>
+<p><%= @room.location %></p>
+<p><strong><%= @room.price_per_hour %> ₽/час</strong></p>
+
+<% if @occupied_slots.any? %>
+  <h2>Занятые слоты</h2>
+  <ul>
+    <% @occupied_slots.each do |booking| %>
+      <li class="occupied-slot">
+        <%= l(booking.start_time, format: :short) %> —
+        <%= l(booking.end_time, format: :short) %>
+        (<%= booking.status %>)
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if user_signed_in? %>
+  <div
+    class="card booking-form"
+    data-controller="booking-calculator"
+    data-booking-calculator-price-value="<%= @room.price_per_hour %>"
+    data-booking-calculator-occupied-value="<%= @occupied_slots.map { |b| { start: b.start_time.iso8601, end: b.end_time.iso8601 } }.to_json %>"
+  >
+    <h2>Забронировать</h2>
+    <%= form_with model: Booking.new, url: bookings_path, local: true do |f| %>
+      <%= f.hidden_field :room_id, value: @room.id %>
+      <div class="field">
+        <%= f.label :start_time, "Начало" %>
+        <%= f.datetime_local_field :start_time,
+              data: { booking_calculator_target: "start", action: "change->booking-calculator#update" } %>
+      </div>
+      <div class="field">
+        <%= f.label :end_time, "Окончание" %>
+        <%= f.datetime_local_field :end_time,
+              data: { booking_calculator_target: "end", action: "change->booking-calculator#update" } %>
+      </div>
+      <p class="price-display" data-booking-calculator-target="price">
+        Стоимость: 0 ₽
+      </p>
+      <p data-booking-calculator-target="warning" class="occupied-slot" hidden></p>
+      <%= f.submit "Забронировать (демо-оплата)", class: "btn" %>
+    <% end %>
+  </div>
+  <p><%= link_to "Отдельная форма бронирования", new_booking_path(room_id: @room.id) %></p>
+<% else %>
+  <p><%= link_to "Войдите", new_user_session_path %> чтобы забронировать.</p>
+<% end %>

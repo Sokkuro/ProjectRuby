@@ -1,0 +1,20 @@
+<header class="site-header">
+  <div class="container nav">
+    <strong><%= link_to "Coworking", root_path %></strong>
+    <%= link_to "Комнаты", rooms_path %>
+    <% if user_signed_in? %>
+      <%= link_to "Мои брони", my_bookings_path %>
+      <% if current_user.owner? %>
+        <%= link_to "Мои помещения", owner_rooms_path %>
+      <% end %>
+      <% if current_user.admin? %>
+        <%= link_to "Админ", admin_root_path %>
+      <% end %>
+      <%= button_to "Выйти", destroy_user_session_path, method: :delete, class: "btn btn-secondary" %>
+    <% else %>
+      <%= link_to "Войти", new_user_session_path %>
+      <%= link_to "Регистрация", new_user_registration_path, class: "btn" %>
+      <%= link_to "GitHub", github_auth_path %>
+    <% end %>
+  </div>
+</header>

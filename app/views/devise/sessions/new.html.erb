@@ -1,0 +1,16 @@
+<h1>Вход</h1>
+
+<%= form_with model: resource, as: resource_name, url: session_path(resource_name), local: true, html: { data: { turbo: false } } do |f| %>
+  <div class="field">
+    <%= f.label :email, "Email" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true %>
+  </div>
+  <div class="field">
+    <%= f.label :password, "Пароль" %>
+    <%= f.password_field :password, autocomplete: "current-password", required: true %>
+  </div>
+  <%= f.submit "Войти", class: "btn" %>
+<% end %>
+
+<p><%= link_to "Регистрация", new_user_registration_path, class: "btn" %></p>
+<p><%= link_to "Войти через GitHub", github_auth_path %></p>
