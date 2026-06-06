@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby "4.0.1"
+ruby "3.4.8"
 
 gem "rails", "~> 7.0.8"
 gem "sprockets-rails"
@@ -37,3 +37,6 @@ group :test do
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 5.0"
 end
+gem "simplecov", "~> 0.22.0", group: :test
+
+gem "rails-controller-testing", "~> 1.0", group: :test

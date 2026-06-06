@@ -93,4 +93,80 @@ class BookingTest < ActiveSupport::TestCase
     assert_includes overlaps, bookings(:confirmed_booking)
     assert_not_includes overlaps, bookings(:canceled_booking)
   end
+
+  test "overlapping scope ignores canceled bookings" do
+    start_time = Time.zone.parse("2030-06-01 14:00:00")
+    end_time = Time.zone.parse("2030-06-01 15:00:00")
+
+    overlaps = Booking.overlapping(start_time, end_time, rooms(:active_room).id)
+    assert_not_includes overlaps, bookings(:canceled_booking)
+  end
+
+  test "total_price class method returns same as calculate_price" do
+    room = rooms(:active_room)
+    start_time = Time.zone.parse("2030-07-01 10:00:00")
+    end_time = Time.zone.parse("2030-07-01 13:00:00")
+
+    calculated = Booking.calculate_price(room, start_time, end_time)
+    total = Booking.total_price(room, start_time, end_time)
+    assert_equal calculated, total
+  end
+
+  test "ransackable_attributes includes all filterable attributes" do
+    attrs = Booking.ransackable_attributes
+    assert_includes attrs, "id"
+    assert_includes attrs, "room_id"
+    assert_includes attrs, "user_id"
+    assert_includes attrs, "status"
+  end
+
+  test "ransackable_associations includes room and user" do
+    assocs = Booking.ransackable_associations
+    assert_includes assocs, "room"
+    assert_includes assocs, "user"
+  end
+
+  test "validates total_price is non-negative" do
+    booking = bookings(:confirmed_booking)
+    booking.total_price = -100
+    assert_not booking.valid?
+    assert_includes booking.errors[:total_price], "must be greater than or equal to 0"
+  end
+
+  test "end_time equal to start_time is invalid" do
+    booking = Booking.new(
+      room: rooms(:active_room),
+      user: users(:client),
+      start_time: Time.zone.parse("2030-07-01 10:00:00"),
+      end_time: Time.zone.parse("2030-07-01 10:00:00"),
+      status: "pending"
+    )
+    assert_not booking.valid?
+  end
+
+  test "overlapping scope without room_id parameter works" do
+    start_time = Time.zone.parse("2030-06-01 11:00:00")
+    end_time = Time.zone.parse("2030-06-01 13:00:00")
+
+    overlaps = Booking.overlapping(start_time, end_time)
+    assert_includes overlaps, bookings(:confirmed_booking)
+  end
+
+  test "allows booking after canceled booking in same slot" do
+    # Canceled booking is 14:00-16:00
+    booking = Booking.new(
+      room: rooms(:active_room),
+      user: users(:other_client),
+      start_time: Time.zone.parse("2030-06-01 14:30:00"),
+      end_time: Time.zone.parse("2030-06-01 15:30:00"),
+      status: "confirmed"
+    )
+    assert booking.valid?
+  end
+
+  test "persisted booking ignores itself in overlap check" do
+    booking = bookings(:confirmed_booking)
+    booking.end_time = Time.zone.parse("2030-06-01 14:00:00")
+    assert booking.valid?
+  end
 end

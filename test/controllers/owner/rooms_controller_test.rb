@@ -93,4 +93,65 @@ class Owner::RoomsControllerTest < ActionDispatch::IntegrationTest
       get owner_room_path(foreign_room)
     end
   end
+
+  test "GET index requires authentication" do
+    get owner_rooms_path
+    assert_redirected_to new_user_session_path
+  end
+
+  test "GET show displays associated bookings" do
+    sign_in @owner
+    get owner_room_path(@room)
+    assert_response :success
+    assert assigns(:bookings).present?
+  end
+
+  test "POST create with invalid parameters fails" do
+    sign_in @owner
+
+    assert_no_difference "Room.count" do
+      post owner_rooms_path, params: {
+        room: {
+          name: "",
+          location: "",
+          price_per_hour: ""
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test "PATCH update with invalid parameters fails" do
+    sign_in @owner
+
+    patch owner_room_path(@room), params: {
+      room: { price_per_hour: "" }
+    }
+
+    assert_response :unprocessable_entity
+  end
+
+  test "owner can update own room" do
+    sign_in @owner
+    patch owner_room_path(@room), params: {
+      room: { location: "New City" }
+    }
+
+    assert_equal "New City", @room.reload.location
+  end
+
+  test "index shows rooms ordered by name" do
+    sign_in @owner
+    get owner_rooms_path
+    rooms_list = assigns(:rooms)
+    assert_equal rooms_list.order(:name), rooms_list
+  end
+
+  test "admin cannot create room as non-owner" do
+    admin = users(:admin)
+    sign_in admin
+    get owner_rooms_path
+    assert_redirected_to root_path
+  end
 end
