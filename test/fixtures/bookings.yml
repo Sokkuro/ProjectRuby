@@ -1,0 +1,23 @@
+confirmed_booking:
+  room: active_room
+  user: client
+  start_time: <%= Time.zone.local(2030, 6, 1, 10, 0, 0) %>
+  end_time: <%= Time.zone.local(2030, 6, 1, 12, 0, 0) %>
+  total_price: 1000.00
+  status: confirmed
+
+canceled_booking:
+  room: active_room
+  user: other_client
+  start_time: <%= Time.zone.local(2030, 6, 1, 14, 0, 0) %>
+  end_time: <%= Time.zone.local(2030, 6, 1, 16, 0, 0) %>
+  total_price: 1000.00
+  status: canceled
+
+pending_booking:
+  room: other_owner_room
+  user: client
+  start_time: <%= Time.zone.local(2030, 6, 5, 9, 0, 0) %>
+  end_time: <%= Time.zone.local(2030, 6, 5, 11, 0, 0) %>
+  total_price: 1600.00
+  status: pending

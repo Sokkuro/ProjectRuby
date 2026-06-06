@@ -1,0 +1,26 @@
+client:
+  email: client@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+  role: client
+
+owner:
+  email: owner@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+  role: owner
+
+admin:
+  email: admin@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+  role: admin
+
+other_client:
+  email: other@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+  role: client
+
+github_user:
+  email: github@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+  role: client
+  provider: github
+  uid: "12345"

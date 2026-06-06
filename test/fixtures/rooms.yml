@@ -1,0 +1,20 @@
+active_room:
+  name: Conference Room A
+  location: Moscow
+  price_per_hour: 500.00
+  user: owner
+  is_active: true
+
+inactive_room:
+  name: Old Room
+  location: Saint Petersburg
+  price_per_hour: 300.00
+  user: owner
+  is_active: false
+
+other_owner_room:
+  name: Private Office
+  location: Kazan
+  price_per_hour: 800.00
+  user: owner
+  is_active: true
